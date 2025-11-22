@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, List, Dict
 
 INPUT_CSV = Path("data/eob_part_d_clean.csv")
-OUT_CSV = Path("data/eob_part_d_final.csv")
+OUT_CSV = Path("data/eob_part_d_clean_v2.csv")
 
 
 def is_null(value: Any) -> bool:
@@ -25,6 +25,7 @@ def drop_null_and_constant_columns(in_path: Path, out_path: Path) -> None:
     - Read CSV file.
     - Drop columns that are entirely null/empty.
     - Drop columns where every value is identical (constant columns).
+    - Never drop the column 'patient_ref'.
     - Write cleaned CSV.
     - Print diagnostics about initial, dropped, and kept columns.
     """
@@ -76,9 +77,10 @@ def drop_null_and_constant_columns(in_path: Path, out_path: Path) -> None:
     # Columns to drop:
     #  - entirely null
     #  - or constant (same value in every row)
+    # BUT NEVER drop 'patient_ref'
     dropped_columns = [
         col for col in fieldnames
-        if all_null[col] or constant[col]
+        if (all_null[col] or constant[col]) and col != "patient_ref"
     ]
 
     kept_fields = [col for col in fieldnames if col not in dropped_columns]

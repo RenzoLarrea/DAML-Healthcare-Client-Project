@@ -4,6 +4,7 @@ from typing import Any, Dict, List
 
 ITEM_COL = "item"  # name of the original column to remove/replace
 DROP_COLS = {"created", "sequence"}  # columns to drop from the *output*
+PROTECTED_COLS = {"patient_ref"}     # columns we must NEVER drop
 
 
 def append_columns_replace_item(
@@ -15,7 +16,8 @@ def append_columns_replace_item(
     Read csv1 and csv2, remove the ITEM_COL from csv1, and insert all
     columns from csv2 at that column's index position in the final output.
 
-    Additionally, drop any columns listed in DROP_COLS from the output.
+    Additionally, drop any columns listed in DROP_COLS from the output,
+    EXCEPT for any columns listed in PROTECTED_COLS (e.g. 'patient_ref').
 
     Assumptions:
     - csv1 and csv2 have the same number of data rows.
@@ -57,24 +59,30 @@ def append_columns_replace_item(
         fieldnames1[:item_idx] + insert_cols + fieldnames1[item_idx + 1 :]
     )
 
-    # Now drop the unwanted columns from the final header
-    combined_fields = [c for c in combined_fields if c not in DROP_COLS]
+    # Now drop the unwanted columns from the final header,
+    # but NEVER drop protected columns like 'patient_ref'.
+    combined_fields = [
+        c for c in combined_fields
+        if (c not in DROP_COLS) or (c in PROTECTED_COLS)
+    ]
 
     # Merge rows: copy csv1 row except ITEM_COL, then add csv2 columns,
-    # but skip any DROP_COLS.
+    # but skip any DROP_COLS (again, not touching PROTECTED_COLS).
     merged_rows: List[Dict[str, Any]] = []
     for r1, r2 in zip(rows1, rows2):
         merged: Dict[str, Any] = {}
 
-        # csv1 columns except ITEM_COL and DROP_COLS
+        # csv1 columns except ITEM_COL and non-protected DROP_COLS
         for col in fieldnames1:
-            if col == ITEM_COL or col in DROP_COLS:
+            if col == ITEM_COL:
+                continue
+            if col in DROP_COLS and col not in PROTECTED_COLS:
                 continue
             merged[col] = r1.get(col, "")
 
-        # csv2 columns (insert_cols) except DROP_COLS
+        # csv2 columns (insert_cols) except non-protected DROP_COLS
         for col in insert_cols:
-            if col in DROP_COLS:
+            if col in DROP_COLS and col not in PROTECTED_COLS:
                 continue
             merged[col] = r2.get(col, "")
 
