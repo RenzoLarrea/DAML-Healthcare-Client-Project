@@ -6,7 +6,7 @@ from typing import Optional, List, Dict, Any
 BASE_URL = "https://sandbox.bluebutton.cms.gov/v2/fhir/ExplanationOfBenefit/"
 HEADERS = {
     "Accept": "application/json",
-    "Authorization": "Bearer 5cqze2mDa6ihL3M9jBnpBysPmMvi2w"  # replace with your token
+    "Authorization": "Bearer 5cqze2mDa6ihL3M9jBnpBysPmMvi2w"  
 }
 
 def fetch_all_bundle_pages(

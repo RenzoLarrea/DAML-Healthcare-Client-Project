@@ -2,7 +2,7 @@ import json
 import csv
 import pandas as pd
 
-df = pd.read_csv('/item_raw.csv')
+df = pd.read_csv('data/item_raw.csv')
 
 extracted_data = []
 
@@ -99,7 +99,7 @@ column_order = [
 
 output_df = output_df[column_order]
 
-output_df.to_csv('/mnt/user-data/outputs/item_extracted.csv', index=False)
+output_df.to_csv('data/item_extracted.csv', index=False)
 
 print(f"Successfully extracted {len(extracted_data)} item records")
 print(f"\nColumns in output:")
@@ -107,4 +107,3 @@ for i, col in enumerate(column_order, 1):
     print(f"  {i}. {col}")
 print(f"\nFirst few rows:")
 print(output_df.head(3).to_string())
-s
