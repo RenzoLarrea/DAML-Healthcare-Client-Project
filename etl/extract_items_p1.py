@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from typing import Any, List
 
-INPUT_CSV = Path("data/eob_part_d_clean.csv")
+INPUT_CSV = Path("data/eob_part_d_clean_v2.csv")
 OUT_CSV = Path("data/item_raw.csv")
 OUT_JSON = Path("data/item_raw_resources.json")
 

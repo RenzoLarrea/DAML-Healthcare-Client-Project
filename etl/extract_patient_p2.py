@@ -6,10 +6,9 @@ from typing import Any, Dict, List, Optional
 # -------------------------------------------------
 # Config
 # -------------------------------------------------
-INPUT_FILE = "patient_raw_resources.json"
+INPUT_FILE = "data/patient_raw_resources.json"
 OUTPUT_DIR = "data"
 CSV_OUT = os.path.join(OUTPUT_DIR, "patient_clean.csv")
-PARQUET_OUT = os.path.join(OUTPUT_DIR, "patient_clean.parquet")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -209,9 +208,7 @@ for col in ["us_core_sex_code", "race_coding", "reference_year", "dual_01", "dua
 # 6. Save cleaned outputs
 # -------------------------------------------------
 df_out.to_csv(CSV_OUT, index=False)
-df_out.to_parquet(PARQUET_OUT, index=False)
 
 print(f"Saved patient CSV → {CSV_OUT}")
-print(f"Saved patient Parquet → {PARQUET_OUT}")
 print("\nSample rows:")
 print(df_out.head(5).to_string(index=False))
